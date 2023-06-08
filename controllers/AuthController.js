@@ -12,14 +12,11 @@ const AuthController = {
         return res.status(400).json({ error: 'Email already exists' });
       }
 
-      // Hash the password
-      const hashedPassword = await bcrypt.hash(password, 30);
-
       // Create a new user
       const newUser = new User({
         username,
         email,
-        password: hashedPassword,
+        password,
       });
 
       // Save the user to the database

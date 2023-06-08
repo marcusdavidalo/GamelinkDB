@@ -21,6 +21,19 @@ mongoose
     console.error('Error connecting to MongoDB:', error);
   });
 
+// API Key Middleware
+const apiKeyMiddleware = (req, res, next) => {
+  const apiKey = req.headers.apiKey || req.query.apiKey;
+  if (apiKey === process.env.API_KEY) {
+    next(); // Proceed to the next middleware/route handler
+  } else {
+    res.status(401).json({ message: 'Invalid API key' });
+  }
+};
+
+// Apply API Key Middleware to all routes
+app.use(apiKeyMiddleware);
+
 // Routes
 const usersRouter = require('./routes/users');
 const commentsRouter = require('./routes/comments');
