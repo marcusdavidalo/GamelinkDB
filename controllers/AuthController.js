@@ -1,6 +1,14 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+
+// Generate a random secret
+const generateSecret = (length) => {
+  return crypto.randomBytes(length).toString('hex');
+};
+
+const JWT_SECRET = generateSecret(64); // Generate a 64-byte secret
 
 const AuthController = {
   register: async (req, res) => {
@@ -32,9 +40,13 @@ const AuthController = {
   login: async (req, res) => {
     const { email, password } = req.body;
 
+    console.log('Request body:', req.body);
+
     try {
       // Find the user by email
       const user = await User.findOne({ email });
+
+      console.log('User:', user);
 
       // Check if user exists
       if (!user) {
@@ -43,17 +55,21 @@ const AuthController = {
 
       // Compare passwords
       const isPasswordValid = await bcrypt.compare(password, user.password);
+      console.log('Is password valid:', isPasswordValid);
+
       if (!isPasswordValid) {
         return res.status(401).json({ error: 'Invalid password' });
       }
 
       // Create a token
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      const token = jwt.sign({ id: user._id }, JWT_SECRET, {
         expiresIn: '1h',
       });
+      console.log('Token:', token);
 
       res.json({ message: 'Login successful', token });
     } catch (error) {
+      console.log('Error:', error);
       res.status(500).json({ error: 'An error occurred' });
     }
   },
