@@ -68,6 +68,11 @@ const AuthController = {
       console.log('Token:', token);
 
       res.json({ message: 'Login successful', token, username: user.username });
+      console.log({
+        message: 'Login Successful',
+        token,
+        username: user.username,
+      });
     } catch (error) {
       console.log('Error:', error);
       res.status(500).json({ error: 'An error occurred' });
