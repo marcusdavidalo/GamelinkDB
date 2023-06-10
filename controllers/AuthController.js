@@ -12,7 +12,7 @@ const JWT_SECRET = generateSecret(64); // Generate a 64-byte secret
 
 const AuthController = {
   register: async (req, res) => {
-    const { username, email, password } = req.body;
+    const { username, email, password, birthdate } = req.body;
 
     try {
       // Check if the email is already registered
@@ -26,6 +26,7 @@ const AuthController = {
         username,
         email,
         password,
+        birthdate,
       });
 
       // Save the user to the database
