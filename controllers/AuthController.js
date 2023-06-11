@@ -68,12 +68,27 @@ const AuthController = {
       });
       console.log('Token:', token);
 
-      res.json({ message: 'Login successful', token, username: user.username });
-      console.log({
-        message: 'Login Successful',
-        token,
-        username: user.username,
-      });
+      if (rememberMe) {
+        // Add this block
+        // Generate a refresh token
+        const refreshToken = jwt.sign({ id: user._id }, JWT_SECRET, {
+          expiresIn: '7d',
+        });
+
+        // Send the refresh token to the client
+        res.json({
+          message: 'Login successful',
+          token,
+          refreshToken,
+          username: user.username,
+        });
+      } else {
+        res.json({
+          message: 'Login successful',
+          token,
+          username: user.username,
+        });
+      }
     } catch (error) {
       console.log('Error:', error);
       res.status(500).json({ error: 'An error occurred' });
