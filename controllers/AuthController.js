@@ -11,17 +11,20 @@ const generateSecret = (length) => {
 const JWT_SECRET = generateSecret(64); // Generate a 64-byte secret
 
 const AuthController = {
+  // Handles user registration
   register: async (req, res) => {
+    // Extract user details from the request body
     const { username, email, password, birthdate } = req.body;
 
     try {
       // Check if the email is already registered
       const existingUser = await User.findOne({ email });
       if (existingUser) {
+        // Return an error response if the email already exists
         return res.status(400).json({ error: 'Email already exists' });
       }
 
-      // Create a new user
+      // Create a new user object with the provided details
       const newUser = new User({
         username,
         email,
@@ -29,16 +32,20 @@ const AuthController = {
         birthdate,
       });
 
-      // Save the user to the database
+      // Save the new user to the database
       await newUser.save();
 
+      // Return a success response
       res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
+      // Return an error response if any error occurs
       res.status(500).json({ error: 'An error occurred' });
     }
   },
 
+  // Handles user login
   login: async (req, res) => {
+    // Extract login details from the request body
     const { email, password, rememberMe } = req.body;
 
     console.log('Request body:', req.body);
@@ -51,31 +58,32 @@ const AuthController = {
 
       // Check if user exists
       if (!user) {
+        // Return an error response if the user is not found
         return res.status(404).json({ error: 'User not found' });
       }
 
-      // Compare passwords
+      // Compare the provided password with the stored password using bcrypt
       const isPasswordValid = await bcrypt.compare(password, user.password);
       console.log('Is password valid:', isPasswordValid);
 
       if (!isPasswordValid) {
+        // Return an error response if the password is invalid
         return res.status(401).json({ error: 'Invalid password' });
       }
 
-      // Create a token
+      // Create a token for authentication using JWT
       const token = jwt.sign({ id: user._id }, JWT_SECRET, {
         expiresIn: '1h',
       });
       console.log('Token:', token);
 
       if (rememberMe) {
-        // Add this block
-        // Generate a refresh token
+        // Generate a refresh token with a longer expiration
         const refreshToken = jwt.sign({ id: user._id }, JWT_SECRET, {
           expiresIn: '7d',
         });
 
-        // Send the refresh token to the client
+        // Send the refresh token to the client along with the success response
         res.json({
           message: 'Login successful',
           token,
@@ -83,6 +91,7 @@ const AuthController = {
           username: user.username,
         });
       } else {
+        // Send the success response with the token and username
         res.json({
           message: 'Login successful',
           token,
@@ -91,6 +100,7 @@ const AuthController = {
       }
     } catch (error) {
       console.log('Error:', error);
+      // Return an error response if any error occurs
       res.status(500).json({ error: 'An error occurred' });
     }
   },
