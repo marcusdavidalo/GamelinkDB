@@ -8,7 +8,8 @@ const generateSecret = (length) => {
   return crypto.randomBytes(length).toString('hex');
 };
 
-const JWT_SECRET = generateSecret(64); // Generate a 64-byte secret
+// Generate a 64-byte secret
+const JWT_SECRET = generateSecret(64);
 
 const AuthController = {
   // Handles user registration
@@ -107,3 +108,23 @@ const AuthController = {
 };
 
 module.exports = AuthController;
+
+/*
+Explanation:
+
+- The code above defines the AuthController, which handles user registration and login.
+
+- The AuthController requires the User model, bcrypt, jwt, and crypto modules.
+
+- A helper function, generateSecret, is defined to generate a random secret using crypto.randomBytes.
+
+- A 64-byte secret, JWT_SECRET, is generated using the generateSecret function.
+
+- The AuthController object is created with two methods: register and login.
+
+- The register method handles user registration. It extracts the username, email, password, and birthdate from the request body. It then checks if the email is already registered in the database. If the email is already registered, it returns an error response. Otherwise, it creates a new User object with the provided details, saves it to the database, and returns a success response.
+
+- The login method handles user login. It extracts the email, password, and rememberMe flag from the request body. It finds the user by email in the database. If the user is not found, it returns an error response. If the user is found, it compares the provided password with the stored password using bcrypt. If the password is invalid, it returns an error response. If the password is valid, it creates a token for authentication using JWT. If rememberMe is true, it also generates a refresh token with a longer expiration. It then sends a success response with the token and username (and refresh token if rememberMe is true).
+
+- The AuthController object is exported to be used by other parts of the application.
+*/
