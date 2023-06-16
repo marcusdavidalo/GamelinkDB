@@ -1,5 +1,4 @@
 const User = require('../models/User');
-const bcrypt = require('bcrypt');
 
 const UserController = {
   // Get all users
@@ -83,38 +82,30 @@ const UserController = {
       bio,
     } = req.body;
     try {
-      // Find the user by ID
-      const user = await User.findById(id);
+      // Find the user by ID and update the provided fields
+      const user = await User.findByIdAndUpdate(
+        id,
+        {
+          username,
+          email,
+          password,
+          birthdate,
+          socialLoginProvider,
+          socialLoginId,
+          name,
+          avatar,
+          bio,
+        },
+        { new: true }
+      );
       if (!user) {
+        // Return an error response if the user is not found
         return res.status(404).json({ error: 'User not found' });
       }
-
-      // Update the user's fields with the provided values
-      user.username = username;
-      user.email = email;
-      user.birthdate = birthdate;
-      user.socialLoginProvider = socialLoginProvider;
-      user.socialLoginId = socialLoginId;
-      user.name = name;
-      user.avatar = avatar;
-      user.bio = bio;
-
-      // Check if the password field is provided and update it if necessary
-      if (password) {
-        // Generate a salt
-        const salt = await bcrypt.genSalt(10);
-        // Hash the password using the generated salt
-        const hashedPassword = await bcrypt.hash(password, salt);
-        // Set the hashed password as the user's password
-        user.password = hashedPassword;
-      }
-
-      // Save the updated user to the database
-      await user.save();
-
       // Return the updated user object
       res.json(user);
     } catch (error) {
+      // Return an error response if any error occurs
       res.status(500).json({ error: 'An error occurred' });
     }
   },

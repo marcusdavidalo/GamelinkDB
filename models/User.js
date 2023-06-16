@@ -91,12 +91,28 @@ userSchema.pre('save', async function (next) {
   }
 });
 
+// Hash the password before updating it in the database
+
+// Use the pre-findOneAndUpdate middleware to hash the password before updating it in the database
+userSchema.pre('findOneAndUpdate', async function (next) {
+  try {
+    if (!this._update.password) {
+      return next();
+    }
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(this._update.password, salt);
+    this._update.password = hashedPassword;
+    next();
+  } catch (error) {
+    return next(error);
+  }
+});
+
 // Custom method to compare the provided password with the hashed password
 
 // Add a custom method to the user schema to compare passwords
 userSchema.methods.comparePassword = async function (password) {
   try {
-    // Compare the provided password with the hashed password
     return await bcrypt.compare(password, this.password);
   } catch (error) {
     throw error;
