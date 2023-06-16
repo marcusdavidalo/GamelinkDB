@@ -36,13 +36,15 @@ app.use(apiKeyMiddleware);
 
 // Routes
 const usersRouter = require('./routes/users');
-const commentsRouter = require('./routes/comments');
+const gameCommentsRouter = require('./routes/gamecomments');
+const postCommentsRouter = require('./routes/postcomments');
 const postsRouter = require('./routes/posts');
 const feedbackRouter = require('./routes/feedback');
 const authRouter = require('./routes/auth');
 
 app.use('/api/users', usersRouter);
-app.use('/api/comments', commentsRouter);
+app.use('/api/gamecomments', gameCommentsRouter);
+app.use('/api/postcomments', postCommentsRouter);
 app.use('/api/posts', postsRouter);
 app.use('/api/feedback', feedbackRouter);
 app.use('/api/auth', authRouter);

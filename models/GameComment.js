@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const commentSchema = new mongoose.Schema({
+const gameCommentSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -21,6 +21,6 @@ const commentSchema = new mongoose.Schema({
   },
 });
 
-const Comment = mongoose.model('Comment', commentSchema);
+const GameComment = mongoose.model('GameComment', gameCommentSchema);
 
-module.exports = Comment;
+module.exports = GameComment;
