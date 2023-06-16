@@ -74,7 +74,7 @@ const AuthController = {
 
       // Create a token for authentication using JWT
       const token = jwt.sign({ id: user._id }, JWT_SECRET, {
-        expiresIn: '1h',
+        expiresIn: '6h',
       });
       console.log('Token:', token);
 
