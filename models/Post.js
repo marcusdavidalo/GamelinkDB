@@ -6,6 +6,8 @@ const postSchema = new mongoose.Schema({
     ref: 'User',
   },
   content: String,
+  photoUrl: String, // Photo
+  videoUrl: String, // Video
   createdAt: {
     type: Date,
     default: Date.now,
