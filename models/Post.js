@@ -6,8 +6,8 @@ const postSchema = new mongoose.Schema({
     ref: 'User',
   },
   content: String,
-  photoUrls: [String], // Array of photo URLs
-  videoUrl: String, // Video URL
+  photoUrl: String, // Photo
+  videoUrl: String, // Video
   createdAt: {
     type: Date,
     default: Date.now,
