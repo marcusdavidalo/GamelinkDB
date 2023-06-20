@@ -1,4 +1,5 @@
 const Post = require('../models/Post');
+const cloudinary = require('cloudinary').v2;
 
 const PostController = {
   getAllPosts: async (req, res) => {
@@ -26,29 +27,50 @@ const PostController = {
   createPost: async (req, res) => {
     const { userId, content } = req.body;
     const videoFile = req.files['video'] ? req.files['video'][0] : null;
-    const photoFile = req.files['photo'] ? req.files['photo'][0] : null;
+    const photoFiles = req.files['photo'];
 
     try {
-      // Compress the video before uploading to Cloudinary
-      const compressedVideo = await cloudinary.uploader.upload(videoFile.path, {
-        resource_type: 'video',
-        quality: 'auto',
-        eager: [{ quality: 'auto', format: 'mp4' }],
-      });
+      let videoUrl = '';
+      let photoUrls = [];
 
-      // Compress the photo before uploading to Cloudinary
-      const compressedPhoto = await cloudinary.uploader.upload(photoFile.path, {
-        resource_type: 'image',
-        quality: 'auto',
-        fetch_format: 'auto',
-        eager: [{ quality: 'auto', fetch_format: 'auto' }],
-      });
+      // Upload video to Cloudinary if provided
+      if (videoFile) {
+        const compressedVideo = await cloudinary.uploader.upload(
+          videoFile.path,
+          {
+            resource_type: 'video',
+            quality: 'auto',
+            eager: [{ quality: 'auto', format: 'mp4' }],
+          }
+        );
+
+        videoUrl = compressedVideo.secure_url;
+      }
+
+      // Upload photos to Cloudinary if provided
+      if (photoFiles) {
+        const uploadPromises = photoFiles.map(async (photoFile) => {
+          const compressedPhoto = await cloudinary.uploader.upload(
+            photoFile.path,
+            {
+              resource_type: 'image',
+              quality: 'auto',
+              fetch_format: 'auto',
+              eager: [{ quality: 'auto', fetch_format: 'auto' }],
+            }
+          );
+
+          photoUrls.push(compressedPhoto.secure_url);
+        });
+
+        await Promise.all(uploadPromises);
+      }
 
       const newPost = new Post({
         userId,
         content,
-        videoUrl: compressedVideo.secure_url,
-        photoUrl: compressedPhoto.secure_url,
+        videoUrl,
+        photoUrls,
       });
 
       await newPost.save();
