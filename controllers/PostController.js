@@ -1,4 +1,5 @@
 const Post = require('../models/Post');
+const cloudinary = require('../config/cloudinary');
 
 const PostController = {
   getAllPosts: async (req, res) => {
@@ -29,31 +30,47 @@ const PostController = {
     const photoFile = req.files['photo'] ? req.files['photo'][0] : null;
 
     try {
+      let videoUrl = null;
+      let photoUrl = null;
+
       // Compress the video before uploading to Cloudinary
-      const compressedVideo = await cloudinary.uploader.upload(videoFile.path, {
-        resource_type: 'video',
-        quality: 'auto',
-        eager: [{ quality: 'auto', format: 'mp4' }],
-      });
+      if (videoFile) {
+        const compressedVideo = await cloudinary.uploader.upload(
+          videoFile.path,
+          {
+            resource_type: 'video',
+            quality: 'auto',
+            eager: [{ quality: 'auto', format: 'mp4' }],
+          }
+        );
+        videoUrl = compressedVideo.secure_url;
+      }
 
       // Compress the photo before uploading to Cloudinary
-      const compressedPhoto = await cloudinary.uploader.upload(photoFile.path, {
-        resource_type: 'image',
-        quality: 'auto',
-        fetch_format: 'auto',
-        eager: [{ quality: 'auto', fetch_format: 'auto' }],
-      });
+      if (photoFile) {
+        const compressedPhoto = await cloudinary.uploader.upload(
+          photoFile.path,
+          {
+            resource_type: 'image',
+            quality: 'auto',
+            fetch_format: 'auto',
+            eager: [{ quality: 'auto', fetch_format: 'auto' }],
+          }
+        );
+        photoUrl = compressedPhoto.secure_url;
+      }
 
       const newPost = new Post({
         userId,
         content,
-        videoUrl: compressedVideo.secure_url,
-        photoUrl: compressedPhoto.secure_url,
+        videoUrl,
+        photoUrl,
       });
 
       await newPost.save();
       res.status(201).json(newPost);
     } catch (error) {
+      console.error(error); // Log any errors that occur
       res.status(500).json({ error: 'An error occurred' });
     }
   },
