@@ -55,8 +55,6 @@ const AuthController = {
       // Find the user by email
       const user = await User.findOne({ email });
 
-      console.log('User:', user);
-
       // Check if user exists
       if (!user) {
         // Return an error response if the user is not found
@@ -65,7 +63,6 @@ const AuthController = {
 
       // Compare the provided password with the stored password using bcrypt
       const isPasswordValid = await bcrypt.compare(password, user.password);
-      console.log('Is password valid:', isPasswordValid);
 
       if (!isPasswordValid) {
         // Return an error response if the password is invalid
@@ -76,7 +73,6 @@ const AuthController = {
       const token = jwt.sign({ id: user._id }, JWT_SECRET, {
         expiresIn: '6h',
       });
-      console.log('Token:', token);
 
       if (rememberMe) {
         // Generate a refresh token with a longer expiration

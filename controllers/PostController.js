@@ -12,6 +12,7 @@ const PostController = {
 
       res.json(posts);
     } catch (error) {
+      console.error('Error in getAllPosts:', error);
       res.status(500).json({ error: 'An error occurred' });
     }
   },
@@ -31,6 +32,7 @@ const PostController = {
 
   createPost: async (req, res) => {
     const { userId, content } = req.body;
+
     const videoFile = req.files['video'] ? req.files['video'][0] : null;
     const photoFile = req.files['photo'] ? req.files['photo'][0] : null;
 
@@ -75,7 +77,7 @@ const PostController = {
       await newPost.save();
       res.status(201).json(newPost);
     } catch (error) {
-      console.error(error); // Log any errors that occur
+      console.error('Error in createPost:', error);
       res.status(500).json({ error: 'An error occurred' });
     }
   },
