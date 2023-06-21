@@ -4,7 +4,12 @@ const cloudinary = require('../config/cloudinary');
 const PostController = {
   getAllPosts: async (req, res) => {
     try {
-      const posts = await Post.find();
+      // Check for the userId query parameter
+      const userId = req.query.userId;
+
+      // If the userId query parameter is present, only return posts from that user
+      const posts = userId ? await Post.find({ userId }) : await Post.find();
+
       res.json(posts);
     } catch (error) {
       res.status(500).json({ error: 'An error occurred' });
