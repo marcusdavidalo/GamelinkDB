@@ -103,10 +103,24 @@ const PostController = {
   deletePost: async (req, res) => {
     const { id } = req.params;
     try {
-      const post = await Post.findByIdAndDelete(id);
+      const post = await Post.findById(id);
       if (!post) {
         return res.status(404).json({ error: 'Post not found' });
       }
+
+      // Delete photo and video from Cloudinary
+      if (post.photoUrl) {
+        const photoPublicId = post.photoUrl.split('/').pop().split('.')[0];
+        await cloudinary.uploader.destroy(photoPublicId);
+      }
+      if (post.videoUrl) {
+        const videoPublicId = post.videoUrl.split('/').pop().split('.')[0];
+        await cloudinary.uploader.destroy(videoPublicId, {
+          resource_type: 'video',
+        });
+      }
+
+      await post.remove();
       res.json({ message: 'Post deleted successfully' });
     } catch (error) {
       res.status(500).json({ error: 'An error occurred' });
