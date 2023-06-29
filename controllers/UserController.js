@@ -110,14 +110,12 @@ const UserController = {
   addFollower: async (req, res) => {
   const { userId, followerId } = req.body;
   try {
-    console.log(`Adding follower ${followerId} to user ${userId}`);
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
     user.followers.push(followerId);
     await user.save();
-    console.log(`Successfully added follower ${followerId} to user ${userId}`);
     res.json(user);
   } catch (error) {
     res.status(500).json({ error: 'An error occurred' });
