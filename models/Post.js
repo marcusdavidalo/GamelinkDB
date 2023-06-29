@@ -6,8 +6,8 @@ const postSchema = new mongoose.Schema({
     ref: 'User',
   },
   content: String,
-  photoUrl: String, // Photo
-  videoUrl: String, // Video
+  photoUrl: String,
+  videoUrl: String,
   createdAt: {
     type: Date,
     default: Date.now,
@@ -16,10 +16,10 @@ const postSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  likes: {
-    type: Number,
-    default: 0,
-  },
+  likes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+}],
   views: {
     type: Number,
     default: 0,

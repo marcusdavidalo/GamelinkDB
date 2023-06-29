@@ -125,6 +125,38 @@ const PostController = {
       res.status(500).json({ error: 'An error occurred' });
     }
   },
-};
 
+  likePost: async (req, res) => {
+    const { postId, userId } = req.body;
+    try {
+      const post = await Post.findById(postId);
+      if (!post) {
+        return res.status(404).json({ error: 'Post not found' });
+      }
+      post.likes.push(userId);
+      await post.save();
+      res.json(post);
+    } catch (error) {
+      console.log('Error in like', error);
+      res.status(500).json({ error: 'An error occurred' });
+    }
+  },
+  
+  unlikePost: async (req, res) => {
+    const { postId, userId } = req.body;
+    try {
+      const post = await Post.findById(postId);
+      if (!post) {
+        return res.status(404).json({ error: 'Post not found' });
+      }
+      post.likes.pull(userId);
+      await post.save();
+      res.json(post);
+    } catch (error) {
+      console.log('Error in unlike', error);
+      res.status(500).json({ error: 'An error occurred' });
+    }
+  },  
+  
+};
 module.exports = PostController;
