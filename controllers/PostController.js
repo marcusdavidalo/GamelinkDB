@@ -84,11 +84,11 @@ const PostController = {
 
   updatePost: async (req, res) => {
     const { id } = req.params;
-    const { userId, content } = req.body;
+    const { userId, content, views } = req.body;
     try {
       const post = await Post.findByIdAndUpdate(
         id,
-        { userId, content },
+        { userId, content, views },
         { new: true }
       );
       if (!post) {
