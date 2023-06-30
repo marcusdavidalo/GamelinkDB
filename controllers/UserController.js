@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const cloudinary = require("../config/cloudinary");
 
 const UserController = {
   getAllUsers: async (req, res) => {
@@ -163,6 +164,54 @@ const UserController = {
       await user.save();
       res.json(user);
     } catch (error) {
+      res.status(500).json({ error: "An error occurred" });
+    }
+  },
+
+  uploadAvatar: async (req, res) => {
+    const { id } = req.params;
+    try {
+      const user = await User.findById(id);
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      // Upload the image to Cloudinary
+      const result = await cloudinary.uploader.upload(req.file.path);
+      console.log(result);
+
+      // Update the avatar URL in the user document
+      user.avatar = result.secure_url;
+      await user.save();
+
+      res.json(user);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: "An error occurred" });
+    }
+  },
+
+  removeAvatar: async (req, res) => {
+    const { id } = req.params;
+    try {
+      const user = await User.findById(id);
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      // Remove the avatar URL from Cloudinary
+      if (user.avatar) {
+        const publicId = user.avatar.split("/").pop().split(".")[0];
+        await cloudinary.uploader.destroy(publicId);
+      }
+
+      // Clear the avatar field in the user document
+      user.avatar = "";
+      await user.save();
+
+      res.json(user);
+    } catch (error) {
+      console.log(error);
       res.status(500).json({ error: "An error occurred" });
     }
   },
