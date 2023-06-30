@@ -1,4 +1,4 @@
-const GameComment = require('../models/GameComment');
+const GameComment = require("../models/GameComment");
 
 const GameCommentController = {
   getAllComments: async (req, res) => {
@@ -6,7 +6,7 @@ const GameCommentController = {
       const comments = await GameComment.find();
       res.json(comments);
     } catch (error) {
-      res.status(500).json({ error: 'An error occurred' });
+      res.status(500).json({ error: "An error occurred" });
     }
   },
 
@@ -15,16 +15,17 @@ const GameCommentController = {
     try {
       const comment = await GameComment.findById(id);
       if (!comment) {
-        return res.status(404).json({ error: 'Comment not found' });
+        return res.status(404).json({ error: "Comment not found" });
       }
       res.json(comment);
     } catch (error) {
-      res.status(500).json({ error: 'An error occurred' });
+      res.status(500).json({ error: "An error occurred" });
     }
   },
 
   createComment: async (req, res) => {
     const { userId, gameId, content } = req.body;
+
     try {
       const newComment = new GameComment({
         userId,
@@ -34,7 +35,7 @@ const GameCommentController = {
       await newComment.save();
       res.status(201).json(newComment);
     } catch (error) {
-      res.status(500).json({ error: 'An error occurred' });
+      res.status(500).json({ error: "An error occurred" });
     }
   },
 
@@ -48,11 +49,11 @@ const GameCommentController = {
         { new: true }
       );
       if (!comment) {
-        return res.status(404).json({ error: 'Comment not found' });
+        return res.status(404).json({ error: "Comment not found" });
       }
       res.json(comment);
     } catch (error) {
-      res.status(500).json({ error: 'An error occurred' });
+      res.status(500).json({ error: "An error occurred" });
     }
   },
 
@@ -61,11 +62,11 @@ const GameCommentController = {
     try {
       const comment = await GameComment.findByIdAndDelete(id);
       if (!comment) {
-        return res.status(404).json({ error: 'Comment not found' });
+        return res.status(404).json({ error: "Comment not found" });
       }
-      res.json({ message: 'Comment deleted successfully' });
+      res.json({ message: "Comment deleted successfully" });
     } catch (error) {
-      res.status(500).json({ error: 'An error occurred' });
+      res.status(500).json({ error: "An error occurred" });
     }
   },
 };

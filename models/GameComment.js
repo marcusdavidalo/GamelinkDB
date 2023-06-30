@@ -1,11 +1,11 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const gameCommentSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: "User",
   },
-  gameId: mongoose.Schema.Types.ObjectId,
+  gameId: Number,
   content: String,
   createdAt: {
     type: Date,
@@ -21,6 +21,6 @@ const gameCommentSchema = new mongoose.Schema({
   },
 });
 
-const GameComment = mongoose.model('GameComment', gameCommentSchema);
+const GameComment = mongoose.model("GameComment", gameCommentSchema);
 
 module.exports = GameComment;

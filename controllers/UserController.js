@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const User = require("../models/User");
 
 const UserController = {
   getAllUsers: async (req, res) => {
@@ -6,7 +6,7 @@ const UserController = {
       const users = await User.find();
       res.json(users);
     } catch (error) {
-      res.status(500).json({ error: 'An error occurred' });
+      res.status(500).json({ error: "An error occurred" });
     }
   },
 
@@ -15,11 +15,11 @@ const UserController = {
     try {
       const user = await User.findById(id);
       if (!user) {
-        return res.status(404).json({ error: 'User not found' });
+        return res.status(404).json({ error: "User not found" });
       }
       res.json(user);
     } catch (error) {
-      res.status(500).json({ error: 'An error occurred' });
+      res.status(500).json({ error: "An error occurred" });
     }
   },
 
@@ -50,7 +50,7 @@ const UserController = {
       await newUser.save();
       res.status(201).json(newUser);
     } catch (error) {
-      res.status(500).json({ error: 'An error occurred' });
+      res.status(500).json({ error: "An error occurred" });
     }
   },
 
@@ -84,11 +84,11 @@ const UserController = {
         { new: true }
       );
       if (!user) {
-        return res.status(404).json({ error: 'User not found' });
+        return res.status(404).json({ error: "User not found" });
       }
       res.json(user);
     } catch (error) {
-      res.status(500).json({ error: 'An error occurred' });
+      res.status(500).json({ error: "An error occurred" });
     }
   },
 
@@ -97,74 +97,73 @@ const UserController = {
     try {
       const user = await User.findByIdAndDelete(id);
       if (!user) {
-        return res.status(404).json({ error: 'User not found' });
+        return res.status(404).json({ error: "User not found" });
       }
-      res.json({ message: 'User deleted successfully' });
+      res.json({ message: "User deleted successfully" });
     } catch (error) {
       res
         .status(500)
-        .json({ error: 'You are not authorized to delete others accounts' });
+        .json({ error: "You are not authorized to delete others accounts" });
     }
   },
 
   addFollower: async (req, res) => {
-  const { userId, followerId } = req.body;
-  try {
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+    const { userId, followerId } = req.body;
+    try {
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      user.followers.push(followerId);
+      await user.save();
+      res.json(user);
+    } catch (error) {
+      res.status(500).json({ error: "An error occurred" });
     }
-    user.followers.push(followerId);
-    await user.save();
-    res.json(user);
-  } catch (error) {
-    res.status(500).json({ error: 'An error occurred' });
-  }
-},
-
+  },
 
   removeFollower: async (req, res) => {
     const { userId, followerId } = req.body;
     try {
       const user = await User.findById(userId);
       if (!user) {
-        return res.status(404).json({ error: 'User not found' });
+        return res.status(404).json({ error: "User not found" });
       }
       user.followers.pull(followerId);
       await user.save();
       res.json(user);
     } catch (error) {
-      res.status(500).json({ error: 'An error occurred' });
+      res.status(500).json({ error: "An error occurred" });
     }
   },
 
   addFollowing: async (req, res) => {
-    const { userId, followingId } = req.body;
+    const { userId, followingameId } = req.body;
     try {
       const user = await User.findById(userId);
       if (!user) {
-        return res.status(404).json({ error: 'User not found' });
+        return res.status(404).json({ error: "User not found" });
       }
-      user.following.push(followingId);
+      user.following.push(followingameId);
       await user.save();
       res.json(user);
     } catch (error) {
-      res.status(500).json({ error: 'An error occurred' });
+      res.status(500).json({ error: "An error occurred" });
     }
   },
 
   removeFollowing: async (req, res) => {
-    const { userId, followingId } = req.body;
+    const { userId, followingameId } = req.body;
     try {
       const user = await User.findById(userId);
       if (!user) {
-        return res.status(404).json({ error: 'User not found' });
+        return res.status(404).json({ error: "User not found" });
       }
-      user.following.pull(followingId);
+      user.following.pull(followingameId);
       await user.save();
       res.json(user);
     } catch (error) {
-      res.status(500).json({ error: 'An error occurred' });
+      res.status(500).json({ error: "An error occurred" });
     }
   },
 };
