@@ -25,7 +25,7 @@ router.post("/addFollowing", UserController.addFollowing);
 router.post("/removeFollowing", UserController.removeFollowing);
 
 // For adding and removing games from the wishlist
-router.post("/addGameToWishlist", UserController.addGameToWishlist);
-router.post("/removeGameFromWishlist", UserController.removeGameFromWishlist);
+router.post("/:id/addGameToWishlist", UserController.addGameToWishlist);
+router.post("/:id/removeGameFromWishlist", UserController.removeGameFromWishlist);
 
 module.exports = router;

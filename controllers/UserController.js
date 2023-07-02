@@ -217,7 +217,8 @@ const UserController = {
   },
 
   addGameToWishlist: async (req, res) => {
-    const { userId, gameId } = req.body;
+    const { id: userId } = req.params;
+    const { gameId } = req.body;
     try {
       const user = await User.findById(userId);
       if (!user) {
@@ -230,9 +231,10 @@ const UserController = {
       res.status(500).json({ error: "An error occurred" });
     }
   },
-  
+
   removeGameFromWishlist: async (req, res) => {
-    const { userId, gameId } = req.body;
+    const { id: userId } = req.params;
+    const { gameId } = req.body;
     try {
       const user = await User.findById(userId);
       if (!user) {
@@ -245,7 +247,6 @@ const UserController = {
       res.status(500).json({ error: "An error occurred" });
     }
   },
-  
 };
 
 module.exports = UserController;
