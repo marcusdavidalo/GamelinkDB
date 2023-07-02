@@ -33,6 +33,10 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  wishlist: [{
+    type: Number,
+    ref: 'Game',
+  }],
   likes: {
     type: Number,
     default: 0,

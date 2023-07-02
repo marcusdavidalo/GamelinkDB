@@ -1,10 +1,10 @@
-const User = require('../models/User');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const crypto = require('crypto');
+const User = require("../models/User");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 
 const generateSecret = (length) => {
-  return crypto.randomBytes(length).toString('hex');
+  return crypto.randomBytes(length).toString("hex");
 };
 
 const JWT_SECRET = generateSecret(64);
@@ -16,7 +16,7 @@ const AuthController = {
     try {
       const existingUser = await User.findOne({ email });
       if (existingUser) {
-        return res.status(400).json({ error: 'Email already exists' });
+        return res.status(400).json({ error: "Email already exists" });
       }
 
       const newUser = new User({
@@ -29,9 +29,9 @@ const AuthController = {
       // Save the new user to the database
       await newUser.save();
 
-      res.status(201).json({ message: 'User registered successfully' });
+      res.status(201).json({ message: "User registered successfully" });
     } catch (error) {
-      res.status(500).json({ error: 'An error occurred' });
+      res.status(500).json({ error: "An error occurred" });
     }
   },
 
@@ -42,38 +42,38 @@ const AuthController = {
       const user = await User.findOne({ email });
 
       if (!user) {
-        return res.status(404).json({ error: 'User not found' });
+        return res.status(404).json({ error: "User not found" });
       }
 
       const isPasswordValid = await bcrypt.compare(password, user.password);
 
       if (!isPasswordValid) {
-        return res.status(401).json({ error: 'Invalid password' });
+        return res.status(401).json({ error: "Invalid password" });
       }
       const token = jwt.sign({ id: user._id }, JWT_SECRET, {
-        expiresIn: '6h',
+        expiresIn: "7d",
       });
 
       if (rememberMe) {
         const refreshToken = jwt.sign({ id: user._id }, JWT_SECRET, {
-          expiresIn: '7d',
+          expiresIn: "1Y",
         });
         res.json({
-          message: 'Login successful',
+          message: "Login successful",
           token,
           refreshToken,
           username: user.username,
         });
       } else {
         res.json({
-          message: 'Login successful',
+          message: "Login successful",
           token,
           username: user.username,
         });
       }
     } catch (error) {
-      console.log('Error:', error);
-      res.status(500).json({ error: 'An error occurred' });
+      console.log("Error:", error);
+      res.status(500).json({ error: "An error occurred" });
     }
   },
 };
