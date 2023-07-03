@@ -41,11 +41,11 @@ const GameCommentController = {
 
   updateComment: async (req, res) => {
     const { id } = req.params;
-    const { userId, gameId, content } = req.body;
+    const { userId, gameId, content, likes } = req.body;
     try {
       const comment = await GameComment.findByIdAndUpdate(
         id,
-        { userId, gameId, content },
+        { userId, gameId, content, likes },
         { new: true }
       );
       if (!comment) {
@@ -55,7 +55,7 @@ const GameCommentController = {
     } catch (error) {
       res.status(500).json({ error: "An error occurred" });
     }
-  },
+  },  
 
   deleteComment: async (req, res) => {
     const { id } = req.params;
