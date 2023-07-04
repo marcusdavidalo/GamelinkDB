@@ -40,13 +40,21 @@ GameLinkDB is the backend server for the PlayKoDEX website. It provides an API f
 
 The GameLinkDB API provides the following endpoints:
 
-`/api/users`: Manage user accounts
-`/api/gamecomments`: Manage game comments
-`/api/postcomments`: Manage post comments
-`/api/posts`: Manage posts
-`/api/feedback`: Manage feedback
-`/api/auth`: Handle user authentication
+```
+/api/users: Manage user accounts
+
+/api/gamecomments: Manage game comments
+
+/api/postcomments: Manage post comments
+
+/api/posts: Manage posts
+
+/api/feedback: Manage feedback
+
+/api/auth: Handle user authentication
+
 Please refer to the code for detailed information on the available endpoints and their usage.
+```
 
 ## Contributing
 
