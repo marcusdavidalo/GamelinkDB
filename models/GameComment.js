@@ -21,6 +21,9 @@ const gameCommentSchema = new mongoose.Schema({
       ref: "User",
     },
   ],
+  isReply: {
+    default: false,
+  },
 });
 
 const GameComment = mongoose.model("GameComment", gameCommentSchema);
