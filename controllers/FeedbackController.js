@@ -1,25 +1,25 @@
-const Feedback = require('../models/Feedback');
+const Feedback = require("../models/Feedback");
 
 const FeedbackController = {
   getAllFeedback: async (req, res) => {
     try {
-      const feedbacks = await Feedback.find();
+      const feedbacks = await Feedback.find().populate("userId");
       res.json(feedbacks);
     } catch (error) {
-      res.status(500).json({ error: 'An error occurred' });
+      res.status(500).json({ error: "An error occurred" });
     }
-  },
+  },  
 
   getFeedbackById: async (req, res) => {
     const { id } = req.params;
     try {
       const feedback = await Feedback.findById(id);
       if (!feedback) {
-        return res.status(404).json({ error: 'Feedback not found' });
+        return res.status(404).json({ error: "Feedback not found" });
       }
       res.json(feedback);
     } catch (error) {
-      res.status(500).json({ error: 'An error occurred' });
+      res.status(500).json({ error: "An error occurred" });
     }
   },
 
@@ -33,7 +33,7 @@ const FeedbackController = {
       await newFeedback.save();
       res.status(201).json(newFeedback);
     } catch (error) {
-      res.status(500).json({ error: 'An error occurred' });
+      res.status(500).json({ error: "An error occurred" });
     }
   },
 
@@ -47,11 +47,11 @@ const FeedbackController = {
         { new: true }
       );
       if (!feedback) {
-        return res.status(404).json({ error: 'Feedback not found' });
+        return res.status(404).json({ error: "Feedback not found" });
       }
       res.json(feedback);
     } catch (error) {
-      res.status(500).json({ error: 'An error occurred' });
+      res.status(500).json({ error: "An error occurred" });
     }
   },
 
@@ -60,11 +60,11 @@ const FeedbackController = {
     try {
       const feedback = await Feedback.findByIdAndDelete(id);
       if (!feedback) {
-        return res.status(404).json({ error: 'Feedback not found' });
+        return res.status(404).json({ error: "Feedback not found" });
       }
-      res.json({ message: 'Feedback deleted successfully' });
+      res.json({ message: "Feedback deleted successfully" });
     } catch (error) {
-      res.status(500).json({ error: 'An error occurred' });
+      res.status(500).json({ error: "An error occurred" });
     }
   },
 };
